@@ -7,4 +7,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(fourierpk
     src/main.cpp
+    src/dft.cpp
 )
