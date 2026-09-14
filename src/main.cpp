@@ -9,11 +9,11 @@ int main() {
     FFT fft;
     FFTW fftw;
 
-    vector<complex<double>> input = { {0, 0}, {1, 0}, {0, 0}, {-1, 0} };
-    vector<complex<double>> input2 = { {0, 0}, {0, -2}, {0, 0}, {0, 2} };
-    vector<complex<double>> output_dft = dft.compute(input);
-    vector<complex<double>> output_fft = fft.compute(input);
-    vector<complex<double>> output_fftw = fftw.computeInverse(input2);
+    vector<double> input = {0, 1, 0, -1};
+    vector<complex<double>> input2 = {{0, 0}, {0, -2}, {0, 0}, {0, 2}};
+    vector<double> output_dft = dft.computeInverse(input2);
+    vector<double> output_fft = fft.computeInverse(input2);
+    vector<double> output_fftw = fftw.computeInverse(input2);
 
     cout << "\nDFT Output:" << endl;
     for (const auto& val : output_dft) {

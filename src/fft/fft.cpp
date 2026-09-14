@@ -34,11 +34,11 @@ void FFT::fft_recursive(vector<complex<double>>& input) {
     }
 }
 
-vector<complex<double>> FFT::compute(const vector<complex<double>>& input) {
+vector<complex<double>> FFT::compute(const vector<double>& input) {
     if (!is_power_of_two(input.size())) {
         throw invalid_argument("FFT Error: Input size must be a power of two.");
     }
-    vector<complex<double>> output = input;
+    vector<complex<double>> output(input.begin(), input.end());
     fft_recursive(output);
 
     for_each(output.begin(), output.end(), [this](complex<double>& temp){
@@ -64,16 +64,19 @@ void FFT::ifft_recursive(vector<complex<double>>& input) {
     }
 }
 
-vector<complex<double>> FFT::computeInverse(const vector<complex<double>>& input) {
+vector<double> FFT::computeInverse(const vector<complex<double>>& input) {
     if (!is_power_of_two(input.size())) {
         throw invalid_argument("FFT Error: Input size must be a power of two.");
     }
     vector<complex<double>> output = input;
     ifft_recursive(output);
 
-    for_each(output.begin(), output.end(), [this](complex<double>& temp){
-        if(abs(temp.real()) < EPS) temp.real(0);
-        if(abs(temp.imag()) < EPS) temp.imag(0);
-    });
-    return output;
+    vector<double>result(output.size());
+
+    for(int i = 0; i < output.size(); i++) {
+        double value = output[i].real();
+        if(abs(value) < EPS) value = 0.0;
+        result[i] = value;
+    }
+    return result;
 }

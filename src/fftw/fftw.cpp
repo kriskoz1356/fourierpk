@@ -1,7 +1,7 @@
 #include "fftw.h"
 using namespace std;
 
-vector<complex<double>> FFTW::compute(const vector<complex<double>>& input) {
+vector<complex<double>> FFTW::compute(const vector<double>& input) {
     int N = input.size();
 
     // Allocate memory for FFTW input and output
@@ -10,8 +10,8 @@ vector<complex<double>> FFTW::compute(const vector<complex<double>>& input) {
 
     // Prepare data for FFTW
     for (int i = 0; i < N; ++i) {
-        fftw_input[i][0] = input[i].real();
-        fftw_input[i][1] = input[i].imag();
+        fftw_input[i][0] = input[i];
+        fftw_input[i][1] = 0.0;
     }
 
     // Create FFTW plan
@@ -34,7 +34,7 @@ vector<complex<double>> FFTW::compute(const vector<complex<double>>& input) {
     return output;
 }
 
-vector<complex<double>> FFTW::computeInverse(const vector<complex<double>>& input) {
+vector<double> FFTW::computeInverse(const vector<complex<double>>& input) {
     int N = input.size();
 
     // Allocate memory for FFTW input and output
@@ -54,9 +54,9 @@ vector<complex<double>> FFTW::computeInverse(const vector<complex<double>>& inpu
     fftw_execute(plan);
 
     // Store the output in a vector of complex numbers and normalize
-    vector<complex<double>> output(N);
+    vector<double> output(N);
     for (int i = 0; i < N; ++i) {
-        output[i] = complex<double>(fftw_output[i][0] / N, fftw_output[i][1] / N);
+        output[i] = fftw_output[i][0] / N;
     }
 
     // Cleanup
