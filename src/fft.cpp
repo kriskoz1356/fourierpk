@@ -47,3 +47,33 @@ vector<complex<double>> FFT::compute(const vector<complex<double>>& input) {
     });
     return output;
 }
+
+void FFT::ifft_recursive(vector<complex<double>>& input) {
+    for (int i = 0; i < input.size(); i++) {
+        input[i] = conj(input[i]);
+    }
+
+    fft_recursive(input);
+
+    for (int i = 0; i < input.size(); i++) {
+        input[i] = conj(input[i]);
+    }
+
+    for (int i = 0; i < input.size(); i++) {
+        input[i] /= input.size();
+    }
+}
+
+vector<complex<double>> FFT::computeInverse(const vector<complex<double>>& input) {
+    if (!is_power_of_two(input.size())) {
+        throw invalid_argument("FFT Error: Input size must be a power of two.");
+    }
+    vector<complex<double>> output = input;
+    ifft_recursive(output);
+
+    for_each(output.begin(), output.end(), [this](complex<double>& temp){
+        if(abs(temp.real()) < EPS) temp.real(0);
+        if(abs(temp.imag()) < EPS) temp.imag(0);
+    });
+    return output;
+}
