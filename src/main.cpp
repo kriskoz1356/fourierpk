@@ -1,34 +1,35 @@
 #include "dft.h"
 #include "fft.h"
 #include "fftw.h"
+#include "file-io.h"
 #include <iostream>
 using namespace std;
 
 int main() {
+    FileIO fileIO;
     DFT dft;
     FFT fft;
     FFTW fftw;
+    vector<double> signal = fileIO.readSignal("data/signal.txt");
+    vector<complex<double>> spectrum = fileIO.readSpectrum("data/spectre.txt");
 
-    vector<double> input = {0, 1, 0, -1};
-    vector<complex<double>> input2 = {{0, 0}, {0, -2}, {0, 0}, {0, 2}};
-    vector<double> output_dft = dft.computeInverse(input2);
-    vector<double> output_fft = fft.computeInverse(input2);
-    vector<double> output_fftw = fftw.computeInverse(input2);
+    // Compute the DFT, FFT, and FFTW of the signal
+    vector<complex<double>> dft_output = dft.compute(signal);
+    vector<complex<double>> fft_output = fft.compute(signal);
+    vector<complex<double>> fftw_output = fftw.compute(signal);
 
-    cout << "\nDFT Output:" << endl;
-    for (const auto& val : output_dft) {
-        cout << val << endl;
-    }
+    // Compute the inverse DFT, FFT, and FFTW of the spectrum
+    vector<double> dft_inverse_output = dft.computeInverse(spectrum);
+    vector<double> fft_inverse_output = fft.computeInverse(spectrum);
+    vector<double> fftw_inverse_output = fftw.computeInverse(spectrum);
 
-    cout << "\nFFT Output:" << endl;
-    for (const auto& val : output_fft) {
-        cout << val << endl;
-    }
-
-    cout << "\nFFTW Output:" << endl;
-    for (const auto& val : output_fftw) {
-        cout << val << endl;
-    }
+    // Write the outputs to files
+    fileIO.writeSpectrum(dft_output, "data/output/dft_output.txt");
+    fileIO.writeSpectrum(fft_output, "data/output/fft_output.txt");
+    fileIO.writeSpectrum(fftw_output, "data/output/fftw_output.txt");
+    fileIO.writeSignal(dft_inverse_output, "data/output/dft_inverse_output.txt");
+    fileIO.writeSignal(fft_inverse_output, "data/output/fft_inverse_output.txt");
+    fileIO.writeSignal(fftw_inverse_output, "data/output/fftw_inverse_output.txt");
 
     return 0;
 }
