@@ -19,6 +19,7 @@ add_executable(fourierpk
     src/fft/fft.cpp
     src/fftw/fftw.cpp
     src/file-io/file-io.cpp
+    src/benchmark/benchmark.cpp
 )
 
 # Include the Fourier Transform headers and FFTW3 headers
@@ -29,6 +30,8 @@ target_include_directories(fourierpk PRIVATE
     src/fft
     src/fftw
     src/file-io
+    data
+    src/benchmark
     ${FFTW3_INCLUDE_DIRS}
 )
 
